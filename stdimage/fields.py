@@ -147,10 +147,10 @@ class StdImageField(ImageField):
             else:
                 dst = filename
             dst_fullpath = os.path.join(settings.MEDIA_ROOT, dst)
+            if self.size:
+                self._resize_image(dst_fullpath, self.size)
             if os.path.abspath(filename) != os.path.abspath(dst_fullpath):
                 os.rename(filename, dst_fullpath)
-                if self.size:
-                    self._resize_image(dst_fullpath, self.size)
                 if self.thumbnail_size:
                     thumbnail_filename = self._get_thumbnail_filename(
                         dst_fullpath)
