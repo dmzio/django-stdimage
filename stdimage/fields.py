@@ -58,10 +58,12 @@ class StdImageField(ImageField):
                 for forcing te image to have the desired size
             - thumbnail_size: a tuple with same values than `size'
             (None for not creating a thumbnail
+            - file_rename: bool
 
         """
         size = kwargs.pop('size', None)
         thumbnail_size = kwargs.pop('thumbnail_size', None)
+        self.file_rename = kwargs.pop('file_rename', True)
 
         params_size = ('width', 'height', 'force')
         for att_name, att in (('size', size),
@@ -138,9 +140,14 @@ class StdImageField(ImageField):
 
         if getattr(instance, self.name):
             filename = getattr(instance, self.name).path
-            ext = os.path.splitext(filename)[1].lower().replace('jpg', 'jpeg')
-            dst = self.generate_filename(instance, '%s_%s%s' % (self.name,
-                                                instance._get_pk_val(), ext))
+            from pudb import set_trace; set_trace()
+            out = self.file_rename
+            if self.file_rename:
+                ext = os.path.splitext(filename)[1].lower().replace('jpg', 'jpeg')
+                dst = self.generate_filename(instance, '%s_%s%s' % (self.name,
+                                                    instance._get_pk_val(), ext))
+            else:
+                dst = filename
             dst_fullpath = os.path.join(settings.MEDIA_ROOT, dst)
             if os.path.abspath(filename) != os.path.abspath(dst_fullpath):
                 os.rename(filename, dst_fullpath)
