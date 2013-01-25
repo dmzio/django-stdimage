@@ -140,8 +140,6 @@ class StdImageField(ImageField):
 
         if getattr(instance, self.name):
             filename = getattr(instance, self.name).path
-            from pudb import set_trace; set_trace()
-            out = self.file_rename
             if self.file_rename:
                 ext = os.path.splitext(filename)[1].lower().replace('jpg', 'jpeg')
                 dst = self.generate_filename(instance, '%s_%s%s' % (self.name,
